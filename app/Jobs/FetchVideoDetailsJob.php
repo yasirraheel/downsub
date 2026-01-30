@@ -41,12 +41,13 @@ class FetchVideoDetailsJob implements ShouldQueue
             // --write-sub: Manual subs
             // --sub-lang en: English
             // --convert-subs vtt: Convert to VTT (text)
-            // --skip-download: Don't download video
-            // --print-json: Output metadata
+            // --skip-download: STRICTLY PREVENT VIDEO DOWNLOAD (Metadata & Subs only)
+            // --print-json: Output metadata (Title, Tags, Thumbnail URL)
             // -o: Output template
 
             $binary = env('YT_DLP_PATH', 'yt-dlp');
-            $command = "$binary --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
+            // Added --no-playlist to ensure we only process the single video
+            $command = "$binary --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --no-playlist --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
 
             // Ensure custom temp dir for execution exists (for shared hosting compatibility)
             $execTempDir = storage_path('app/temp/yt-dlp-run');

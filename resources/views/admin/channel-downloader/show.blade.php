@@ -2,21 +2,21 @@
 @section('title', 'Channel Videos: ' . $channel->name)
 
 @section('content')
-<div class="d-flex align-items-center justify-content-between mb-3">
-    <div>
-        <a href="{{ route('admin.channel-downloader.index') }}" class="btn btn-secondary mr-2">&larr; Back</a>
-        <h3 class="d-inline-block align-middle mb-0">{{ $channel->name }} <small class="text-muted">({{ $channel->videos()->count() }} Videos)</small></h3>
-    </div>
-    <div>
-        <span class="badge badge-{{ $channel->status == 'completed' ? 'success' : ($channel->status == 'failed' ? 'danger' : 'warning') }} p-2">
-            Status: {{ ucfirst($channel->status) }}
-        </span>
+<div class="card mb-4">
+    <div class="d-flex align-items-center justify-content-between">
+        <h3>{{ $channel->name }} <small class="text-muted">({{ $channel->videos()->count() }} Videos)</small></h3>
+        <div>
+            <span class="badge badge-{{ $channel->status == 'completed' ? 'success' : ($channel->status == 'failed' ? 'danger' : 'warning') }} p-2 mr-2">
+                Status: {{ ucfirst($channel->status) }}
+            </span>
+            <a href="{{ route('admin.channel-downloader.index') }}" class="btn btn-secondary">&larr; Back</a>
+        </div>
     </div>
 </div>
 
 <div class="grid-4">
     @foreach($videos as $video)
-    <div class="card h-100 shadow-sm">
+    <div class="card h-100">
         @if($video->thumbnail_url)
         <img src="{{ $video->thumbnail_url }}" class="card-img-top" alt="{{ $video->title }}" style="height: 160px; object-fit: cover;">
         @else

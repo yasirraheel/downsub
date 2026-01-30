@@ -49,10 +49,15 @@
         <div class="ui-item" style="border: 1px solid #333; padding: 1.5rem; border-radius: 8px; position: relative;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                 <h4 style="color: var(--primary); margin: 0;">{{ $element->name }}</h4>
-                <form action="{{ route('admin.ui-elements.destroy', $element->id) }}" method="POST" onsubmit="return confirm('Delete this element?');">
+                <form id="delete-form-{{ $element->id }}" action="{{ route('admin.ui-elements.destroy', $element->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-outline btn-sm" style="padding: 0.2rem 0.5rem; color: var(--danger); border-color: var(--danger);">
+                    <button type="button" class="btn btn-outline btn-sm confirm-action" 
+                            data-form-id="delete-form-{{ $element->id }}"
+                            data-title="Delete UI Element?"
+                            data-message="Are you sure you want to delete '{{ $element->name }}'? This cannot be undone."
+                            data-confirm-text="Yes, delete it!"
+                            style="padding: 0.2rem 0.5rem; color: var(--danger); border-color: var(--danger);">
                         <i class="fas fa-trash"></i>
                     </button>
                 </form>

@@ -25,7 +25,8 @@
 *   **Validation Errors:** Automatically caught and displayed as Red Toasts.
 
 ### B. Confirmations (SweetAlert2)
-**DO NOT** write custom JavaScript for confirmation dialogs. Use the global `confirm-action` system.
+**STRICT MANDATE:** NEVER use `window.confirm()`, `alert()`, or standard browser dialogs for confirmations or warnings.
+**ALWAYS** use the global `confirm-action` system or manual `Swal.fire()` calls.
 
 *   **For Links:** Add class `confirm-action`.
     ```html
@@ -33,14 +34,17 @@
     ```
 *   **For Forms:** Add class `confirm-action` to the button and `data-form-id="my-form"`.
     ```html
-    <button class="confirm-action" data-form-id="delete-form-1">Delete</button>
+    <form id="delete-form-1" action="..." method="POST">
+        @csrf @method('DELETE')
+        <button type="button" class="confirm-action" data-form-id="delete-form-1">Delete</button>
+    </form>
     ```
 *   **Customization:**
     ```html
     <a href="..." class="confirm-action" 
        data-title="Are you sure?" 
        data-message="This cannot be undone!" 
-       data-confirm-text="Yes, do it!">Delete</a>
+       data-confirm-text="Yes, delete it!">Delete</a>
     ```
 
 ### C. Big Success Modal (SweetAlert2)

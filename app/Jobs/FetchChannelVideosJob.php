@@ -90,13 +90,17 @@ class FetchChannelVideosJob implements ShouldQueue
                 // Sometimes yt-dlp might return entries that are not videos or have different structures
                 if (!isset($entry['id'])) continue;
 
-                // FIX: Check if the ID looks like a valid YouTube video ID (11 chars)
-                // If it's a playlist ID or channel ID, skip it.
-                // However, yt-dlp flat-playlist on a channel usually returns video IDs.
+                $videoId = $entry['id'];
+
+                // CRITICAL FIX: Skip entries that are not videos (e.g., Channel or Playlist IDs)
+                // Video IDs are typically 11 characters. Channel IDs are ~24 chars (UC...).
+                if (strlen($videoId) !== 11) {
+                    Log::info("Skipping non-video entry: {$videoId} (Title: " . ($entry['title'] ?? 'Unknown') . ")");
+                    continue;
+                }
                 
                 // Construct the URL properly
                 // Sometimes 'url' field in entry is better if 'id' is just part of it
-                $videoId = $entry['id'];
                 $videoUrl = $entry['url'] ?? "https://www.youtube.com/watch?v={$videoId}";
 
                 // If the URL is just an ID, fix it

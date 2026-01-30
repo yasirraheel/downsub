@@ -20,7 +20,10 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
         return view('admin.dashboard');
     })->name('dashboard');
 
-    // Placeholders for other admin pages (Cleaned up)
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/general', [SettingsController::class, 'updateGeneral'])->name('settings.updateGeneral');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.updatePassword');
+
     Route::get('/system-logs', function () { return view('admin.system-logs'); })->name('system-logs');
-    Route::get('/settings', function () { return view('admin.settings'); })->name('settings');
 });

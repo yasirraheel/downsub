@@ -19,7 +19,7 @@
                 <input type="text" name="class_name" class="form-control" placeholder="e.g. .btn-neon">
             </div>
         </div>
-        
+
         <div class="grid-2">
             <div class="form-group">
                 <label class="form-label">HTML Code</label>
@@ -52,7 +52,7 @@
                 <form id="delete-form-{{ $element->id }}" action="{{ route('admin.ui-elements.destroy', $element->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="button" class="btn btn-outline btn-sm confirm-action" 
+                    <button type="button" class="btn btn-outline btn-sm confirm-action"
                             data-form-id="delete-form-{{ $element->id }}"
                             data-title="Delete UI Element?"
                             data-message="Are you sure you want to delete '{{ $element->name }}'? This cannot be undone."
@@ -62,10 +62,10 @@
                     </button>
                 </form>
             </div>
-            
+
             <div style="display: flex; justify-content: center; align-items: center; padding: 2rem; background: #121212; border-radius: 4px; margin-bottom: 1rem; overflow: hidden;">
-                <!-- Preview (CSS is loaded via custom-ui.css) -->
-                {!! $element->html_code !!}
+                <!-- Preview (Isolated using Shadow DOM) -->
+                <div class="shadow-host" data-html="{{ $element->html_code }}" data-css="{{ $element->css_code }}"></div>
             </div>
 
             <div style="background: #000; padding: 1rem; border-radius: 4px; overflow-x: auto;">
@@ -82,7 +82,7 @@
         <!-- Uiverse Button -->
         <div class="ui-item" style="border: 1px solid #333; padding: 1.5rem; border-radius: 8px;">
             <h4 style="margin-bottom: 1rem; color: var(--primary);">Gradient Button</h4>
-            
+
             <div style="display: flex; justify-content: center; align-items: center; padding: 2rem; background: #121212; border-radius: 4px; margin-bottom: 1rem;">
                 <!-- Preview -->
                 <button class="btn-uiverse">
@@ -105,7 +105,7 @@
         <!-- Uiverse Loader -->
         <div class="ui-item" style="border: 1px solid #333; padding: 1.5rem; border-radius: 8px;">
             <h4 style="margin-bottom: 1rem; color: var(--primary);">SVG Ring Loader</h4>
-            
+
             <div style="display: flex; justify-content: center; align-items: center; padding: 2rem; background: #121212; border-radius: 4px; margin-bottom: 1rem;">
                 <!-- Preview -->
                 <svg class="pl" viewBox="0 0 240 240">
@@ -132,4 +132,23 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    // Initialize Shadow DOM for previews to prevent CSS leakage
+    document.querySelectorAll('.shadow-host').forEach(host => {
+        const shadow = host.attachShadow({ mode: 'open' });
+        const html = host.getAttribute('data-html');
+        const css = host.getAttribute('data-css');
+
+        shadow.innerHTML = `
+            <style>
+                :host { display: block; all: initial; font-family: sans-serif; }
+                ${css}
+            </style>
+            ${html}
+        `;
+    });
+</script>
 @endsection

@@ -10,9 +10,10 @@ If you are on shared hosting and cannot use `sudo` or `apt-get`, follow these st
     ```bash
     mkdir -p ~/bin
     ```
-3.  **Download the latest yt-dlp binary**:
+3.  **Download the latest yt-dlp binary (Standalone for Linux)**:
+    Since your system Python is old (3.6), you MUST use the standalone Linux binary which includes its own Python.
     ```bash
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/bin/yt-dlp
+    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -o ~/bin/yt-dlp
     ```
 4.  **Make it executable**:
     ```bash

@@ -50,6 +50,10 @@ class FetchVideoDetailsJob implements ShouldQueue
 
             $result = Process::timeout(600)->run($command);
 
+            if ($result->failed()) {
+                throw new \Exception("yt-dlp failed: " . $result->errorOutput());
+            }
+
             $output = $result->output();
             $data = json_decode($output, true);
 

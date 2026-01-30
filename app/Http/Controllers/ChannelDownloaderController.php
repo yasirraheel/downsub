@@ -56,6 +56,13 @@ class ChannelDownloaderController extends Controller
         return redirect()->back()->with('success', 'Retry command sent.');
     }
 
+    public function destroy(Channel $channel)
+    {
+        $channel->delete(); // Cascading delete handles videos
+        return redirect()->route('admin.channel-downloader.index')
+            ->with('success', 'Channel and its videos deleted successfully.');
+    }
+
     public function downloadSubtitle(Video $video)
     {
         if (!$video->subtitle_content) {
@@ -72,7 +79,7 @@ class ChannelDownloaderController extends Controller
     private function checkYtDlpStatus()
     {
         $binary = env('YT_DLP_PATH', 'yt-dlp');
-        
+
         // Define a custom temp directory for yt-dlp execution
         // This solves "failed to map segment from shared object" errors on shared hosting
         $tempDir = storage_path('app/temp/yt-dlp-run');
@@ -83,7 +90,7 @@ class ChannelDownloaderController extends Controller
         try {
             // Pass TMPDIR environment variable to override system /tmp
             $process = Process::env(['TMPDIR' => $tempDir])->run("$binary --version");
-            
+
             if ($process->successful()) {
                 return ['available' => true, 'path' => $binary, 'version' => trim($process->output())];
             }

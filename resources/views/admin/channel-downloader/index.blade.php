@@ -5,7 +5,7 @@
 
 <div class="card mb-4">
     <h3>Fetch New Channel</h3>
-    
+
     @if(!$ytDlpStatus['available'])
         <div class="alert alert-danger" style="margin-top: 1rem;">
             <strong>Error:</strong> <code>yt-dlp</code> is not working properly.
@@ -68,17 +68,28 @@
                     <td>{{ $channel->video_count }}</td>
                     <td>{{ $channel->created_at->diffForHumans() }}</td>
                     <td>
-                        <a href="{{ route('admin.channel-downloader.show', $channel) }}" class="btn btn-sm btn-info">
-                            <i class="fas fa-eye"></i> View
-                        </a>
-                        @if($channel->status == 'failed' || $channel->status == 'completed')
-                        <form action="{{ route('admin.channel-downloader.retry', $channel) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-warning confirm-action" data-title="Retry Fetching?" data-message="This will re-scan the channel for new videos.">
-                                <i class="fas fa-sync"></i> Retry
-                            </button>
-                        </form>
-                        @endif
+                        <div class="btn-group" role="group">
+                            <a href="{{ route('admin.channel-downloader.show', $channel) }}" class="btn btn-info" title="View Channel">
+                                <i class="fas fa-eye"></i>
+                            </a>
+
+                            @if($channel->status == 'failed' || $channel->status == 'completed')
+                            <form action="{{ route('admin.channel-downloader.retry', $channel) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-warning confirm-action" data-title="Retry Fetching?" data-message="This will re-scan the channel for new videos." title="Retry Fetching">
+                                    <i class="fas fa-sync"></i>
+                                </button>
+                            </form>
+                            @endif
+
+                            <form action="{{ route('admin.channel-downloader.destroy', $channel) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger confirm-action" data-title="Delete Channel?" data-message="This will delete the channel and ALL its fetched videos permanently." title="Delete Channel">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @endforeach

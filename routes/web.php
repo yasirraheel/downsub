@@ -41,6 +41,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
     Route::get('/channel-downloader', [ChannelDownloaderController::class, 'index'])->name('channel-downloader.index');
     Route::post('/channel-downloader', [ChannelDownloaderController::class, 'store'])->name('channel-downloader.store');
     Route::get('/channel-downloader/{channel}', [ChannelDownloaderController::class, 'show'])->name('channel-downloader.show');
+    Route::delete('/channel-downloader/{channel}', [ChannelDownloaderController::class, 'destroy'])->name('channel-downloader.destroy');
     Route::post('/channel-downloader/{channel}/retry', [ChannelDownloaderController::class, 'retry'])->name('channel-downloader.retry');
     Route::get('/videos/{video}/download-subtitle', [ChannelDownloaderController::class, 'downloadSubtitle'])->name('videos.download-subtitle');
 });

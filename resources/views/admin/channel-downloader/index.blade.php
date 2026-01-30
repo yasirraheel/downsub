@@ -68,26 +68,34 @@
                     <td>{{ $channel->video_count }}</td>
                     <td>{{ $channel->created_at->diffForHumans() }}</td>
                     <td>
-                        <div class="d-flex align-items-center" style="gap: 5px;">
-                            <a href="{{ route('admin.channel-downloader.show', $channel) }}" class="btn btn-info btn-sm" title="View Channel">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="{{ route('admin.channel-downloader.show', $channel) }}" class="btn btn-info" title="View Channel">
                                 <i class="fas fa-eye"></i>
                             </a>
                             
                             @if($channel->status == 'failed' || $channel->status == 'completed')
-                            <form action="{{ route('admin.channel-downloader.retry', $channel) }}" method="POST" class="d-inline">
+                            <button type="button" class="btn btn-warning confirm-action" 
+                                data-form-id="retry-form-{{ $channel->id }}"
+                                data-title="Retry Fetching?" 
+                                data-message="This will re-scan the channel for new videos." 
+                                title="Retry Fetching">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                            <form id="retry-form-{{ $channel->id }}" action="{{ route('admin.channel-downloader.retry', $channel) }}" method="POST" class="d-none">
                                 @csrf
-                                <button type="submit" class="btn btn-warning btn-sm confirm-action" data-title="Retry Fetching?" data-message="This will re-scan the channel for new videos." title="Retry Fetching">
-                                    <i class="fas fa-sync"></i>
-                                </button>
                             </form>
                             @endif
 
-                            <form action="{{ route('admin.channel-downloader.destroy', $channel) }}" method="POST" class="d-inline confirm-delete-form">
+                            <button type="button" class="btn btn-danger confirm-action" 
+                                data-form-id="delete-form-{{ $channel->id }}"
+                                data-title="Delete Channel?" 
+                                data-message="This will delete the channel and ALL its fetched videos permanently." 
+                                title="Delete Channel">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <form id="delete-form-{{ $channel->id }}" action="{{ route('admin.channel-downloader.destroy', $channel) }}" method="POST" class="d-none">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger confirm-delete-btn" data-title="Delete Channel?" data-message="This will delete the channel and ALL its fetched videos permanently." title="Delete Channel">
-                                    <i class="fas fa-trash"></i>
-                                </button>
                             </form>
                         </div>
                     </td>

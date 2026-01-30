@@ -122,7 +122,8 @@ class FetchChannelVideosJob implements ShouldQueue
 
                 // Dispatch job to fetch details for this video
                 // We delay them slightly to avoid rate limiting if necessary, but sequential is fine.
-                FetchVideoDetailsJob::dispatch($video);
+                // Added progressive delay (5 seconds per video) to prevent bot detection
+                FetchVideoDetailsJob::dispatch($video)->delay(now()->addSeconds($count * 5));
                 $count++;
             }
 

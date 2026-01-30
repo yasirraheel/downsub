@@ -82,3 +82,15 @@ return redirect()->route('home')->with('sweet_success', 'Welcome!');
         ...
     @endsection
     ```
+
+---
+
+## 6. Responsive & Mobile-First Design
+
+**MANDATORY:** All new views must be mobile-friendly and responsive.
+
+*   **Grid System:** Use `.grid-2`, `.grid-3`, or `.grid-4` for layouts. These automatically stack on mobile (width < 576px).
+*   **Flex Utilities:** Use `flex-wrap: wrap` when using `display: flex` for headers or action bars to prevent content squashing on small screens.
+*   **Tables:** Ensure tables have horizontal scrolling on mobile (wrap in `.table-responsive` if available, or add `overflow-x: auto`).
+*   **Forms:** Form controls automatically span 100% width. Ensure labels and inputs are readable on small devices.
+*   **Testing:** Always verify the view on a mobile viewport size before finalizing.

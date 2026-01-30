@@ -5,11 +5,11 @@
 @section('content')
 
 <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
         <h3>Application Logs (Last 200 Lines)</h3>
         <form action="{{ route('admin.system-logs.clear') }}" method="POST" id="clear-logs-form">
             @csrf
-            <button type="button" class="btn btn-danger confirm-action" 
+            <button type="button" class="btn btn-danger confirm-action"
                 data-form-id="clear-logs-form"
                 data-title="Clear all logs?"
                 data-message="This will permanently delete the current log file."

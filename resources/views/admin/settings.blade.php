@@ -19,11 +19,12 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Timezone</label>
-                <select name="timezone" class="form-control">
-                    <option value="UTC" {{ ($settings['timezone'] ?? '') == 'UTC' ? 'selected' : '' }}>UTC</option>
-                    <option value="Asia/Karachi" {{ ($settings['timezone'] ?? '') == 'Asia/Karachi' ? 'selected' : '' }}>Asia/Karachi</option>
-                    <option value="America/New_York" {{ ($settings['timezone'] ?? '') == 'America/New_York' ? 'selected' : '' }}>America/New_York</option>
-                    <option value="Europe/London" {{ ($settings['timezone'] ?? '') == 'Europe/London' ? 'selected' : '' }}>Europe/London</option>
+                <select name="timezone" class="form-control select2">
+                    @foreach($timezones as $timezone)
+                        <option value="{{ $timezone }}" {{ ($settings['timezone'] ?? config('app.timezone')) == $timezone ? 'selected' : '' }}>
+                            {{ $timezone }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Save General</button>

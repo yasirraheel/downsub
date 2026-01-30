@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Middleware\IsAdmin;
 
 // Redirect root to admin login or dashboard

@@ -132,14 +132,38 @@
             @endforeach
         @endif
 
-        // Global SweetAlert Confirmation
-        $(document).on('click', '.confirm-action', function(e) {
+        // Global SweetAlert Confirmation for Delete Forms
+        $(document).on('click', '.confirm-delete-btn', function(e) {
             e.preventDefault();
-            const url = $(this).attr('href');
-            const formId = $(this).data('form-id');
+            const form = $(this).closest('form');
             const message = $(this).data('message') || "You won't be able to revert this!";
             const title = $(this).data('title') || "Are you sure?";
             const confirmButtonText = $(this).data('confirm-text') || "Yes, delete it!";
+
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: confirmButtonText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+
+        // Global SweetAlert Confirmation
+        $(document).on('click', '.confirm-action', function(e) {
+            e.preventDefault();
+            const $this = $(this);
+            const url = $this.attr('href');
+            const formId = $this.data('form-id');
+            const message = $this.data('message') || "You won't be able to revert this!";
+            const title = $this.data('title') || "Are you sure?";
+            const confirmButtonText = $this.data('confirm-text') || "Yes, do it!";
 
             Swal.fire({
                 title: title,
@@ -153,6 +177,8 @@
                 if (result.isConfirmed) {
                     if (formId) {
                         document.getElementById(formId).submit();
+                    } else if ($this.closest('form').length > 0) {
+                         $this.closest('form').submit();
                     } else if (url && url !== '#') {
                         window.location.href = url;
                     }

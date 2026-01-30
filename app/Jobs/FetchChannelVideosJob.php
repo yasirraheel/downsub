@@ -37,7 +37,20 @@ class FetchChannelVideosJob implements ShouldQueue
             // We use Process to run the command.
             // Note: This checks for env variable or assumes yt-dlp is in PATH.
             $binary = env('YT_DLP_PATH', 'yt-dlp');
-            $command = "$binary --flat-playlist --dump-single-json \"{$this->channel->url}\"";
+            
+            $url = $this->channel->url;
+            // Fix for YouTube Channel Root URLs:
+            // If the user provides "https://www.youtube.com/@Channel", yt-dlp returns the tabs (Videos, Shorts, Live) as entries.
+            // We want the actual videos, so we append '/videos' to target the main video list by default.
+            // We only do this if it looks like a root channel URL and not a specific playlist or video.
+            if (str_contains($url, 'youtube.com/') && !str_contains($url, 'list=') && !str_contains($url, '/watch')) {
+                 if (preg_match('/(@[\w\.-]+|channel\/[\w-]+)\/?$/', $url)) {
+                      $url = rtrim($url, '/') . '/videos';
+                      Log::info("Adjusted Channel URL to: $url");
+                 }
+            }
+
+            $command = "$binary --flat-playlist --dump-single-json \"{$url}\"";
             
             // Use custom temp dir to avoid shared hosting /tmp restrictions
             $tempDir = storage_path('app/temp/yt-dlp-run');

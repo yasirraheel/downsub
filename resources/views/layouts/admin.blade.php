@@ -14,7 +14,10 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="fas fa-cubes" style="margin-right: 10px;"></i> Starter Kit
+                <a href="{{ route('admin.dashboard') }}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                    <i class="fas fa-cubes" style="margin-right: 10px;"></i>
+                    {{ \App\Models\Setting::get('app_name', 'Starter Kit') }}
+                </a>
             </div>
             <nav class="sidebar-nav">
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -60,6 +63,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Toastr Configuration
         toastr.options = {
@@ -106,6 +110,44 @@
             @foreach($errors->all() as $error)
                 toastr.error("{{ $error }}");
             @endforeach
+        @endif
+
+        // Global SweetAlert Confirmation
+        $(document).on('click', '.confirm-action', function(e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+            const formId = $(this).data('form-id');
+            const message = $(this).data('message') || "You won't be able to revert this!";
+            const title = $(this).data('title') || "Are you sure?";
+            const confirmButtonText = $(this).data('confirm-text') || "Yes, delete it!";
+
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: confirmButtonText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (formId) {
+                        document.getElementById(formId).submit();
+                    } else if (url && url !== '#') {
+                        window.location.href = url;
+                    }
+                }
+            });
+        });
+
+        // Global SweetAlert Success (Optional Override)
+        @if(Session::has('sweet_success'))
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ Session::get('sweet_success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
         @endif
     </script>
 

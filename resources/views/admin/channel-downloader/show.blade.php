@@ -31,7 +31,7 @@
                 <br>
                 Status: <span class="text-{{ $video->status == 'fetched' ? 'success' : ($video->status == 'failed' ? 'danger' : 'warning') }}">{{ $video->status }}</span>
             </div>
-
+            
             <div class="mt-auto btn-group w-100">
                 <a href="{{ $video->url }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Watch on YouTube">
                     <i class="fab fa-youtube"></i>
@@ -45,7 +45,7 @@
                     <i class="fas fa-file-alt"></i>
                 </button>
                 @endif
-
+                
                 <button type="button" class="btn btn-sm btn-info" onclick="showTags('{{ addslashes(json_encode($video->tags ?? [])) }}')">
                     <i class="fas fa-tags"></i>
                 </button>

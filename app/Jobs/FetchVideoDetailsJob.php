@@ -49,11 +49,12 @@ class FetchVideoDetailsJob implements ShouldQueue
             // Added --no-playlist to ensure we only process the single video
             // Added --user-agent and --referer to avoid bot detection
             // Added --sleep-requests to be safe (though we are running single command)
+            // Added --extractor-args "youtube:player_client=android" to bypass web-based bot detection
             $userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
-            $command = "$binary --user-agent \"{$userAgent}\" --referer \"https://www.youtube.com/\" --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --no-playlist --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
+            $command = "$binary --user-agent \"{$userAgent}\" --referer \"https://www.youtube.com/\" --extractor-args \"youtube:player_client=android\" --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --no-playlist --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
 
             // Add a random delay to prevent hammering if multiple jobs run
-            sleep(rand(2, 5));
+            sleep(rand(5, 10));
 
             // Ensure custom temp dir for execution exists (for shared hosting compatibility)
             $execTempDir = storage_path('app/temp/yt-dlp-run');

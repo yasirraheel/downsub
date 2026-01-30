@@ -7,15 +7,19 @@
         <h3>Channel Downloader</h3>
     </div>
     <div class="card-body">
-        @if(!$ytDlpAvailable)
+        @if(!$ytDlpStatus['available'])
             <div class="alert alert-danger">
-                <strong>Error:</strong> <code>yt-dlp</code> is not detected on the server.
-                <p>Please install it or ensure it is in the system PATH to use this module.</p>
+                <strong>Error:</strong> <code>yt-dlp</code> is not working properly.
+                <hr>
+                <p class="mb-1"><strong>Attempted Path:</strong> <code>{{ $ytDlpStatus['path'] }}</code></p>
+                <p class="mb-1"><strong>Error Details:</strong> {{ $ytDlpStatus['error'] }}</p>
+                <hr>
+                <p>Please check your <code>.env</code> file. Ensure <code>YT_DLP_PATH</code> is set to the absolute path of the executable.</p>
                 <a href="https://github.com/yt-dlp/yt-dlp/releases" target="_blank" class="btn btn-sm btn-light">Download yt-dlp</a>
             </div>
         @else
             <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> <strong>System Ready:</strong> yt-dlp is installed and detected.
+                <i class="fas fa-check-circle"></i> <strong>System Ready:</strong> yt-dlp is installed (v{{ $ytDlpStatus['version'] }}).
             </div>
         @endif
 
@@ -25,7 +29,7 @@
                 <label for="url">YouTube Channel URL</label>
                 <div class="input-group">
                     <input type="url" name="url" id="url" class="form-control" placeholder="https://www.youtube.com/@ChannelName" required>
-                    <button type="submit" class="btn btn-primary" {{ !$ytDlpAvailable ? 'disabled' : '' }}>
+                    <button type="submit" class="btn btn-primary" {{ !$ytDlpStatus['available'] ? 'disabled' : '' }}>
                         <i class="fas fa-search"></i> Fetch Channel
                     </button>
                 </div>

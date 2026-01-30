@@ -14,9 +14,9 @@ class ChannelDownloaderController extends Controller
     public function index()
     {
         $channels = Channel::withCount('videos')->latest()->paginate(10);
-        $ytDlpAvailable = $this->checkYtDlp();
+        $ytDlpStatus = $this->checkYtDlpStatus();
 
-        return view('admin.channel-downloader.index', compact('channels', 'ytDlpAvailable'));
+        return view('admin.channel-downloader.index', compact('channels', 'ytDlpStatus'));
     }
 
     public function store(Request $request)
@@ -25,8 +25,9 @@ class ChannelDownloaderController extends Controller
             'url' => 'required|url|unique:channels,url',
         ]);
 
-        if (!$this->checkYtDlp()) {
-            return redirect()->back()->with('error', 'yt-dlp is not installed or not found in PATH. Please install it first.');
+        $status = $this->checkYtDlpStatus();
+        if (!$status['available']) {
+            return redirect()->back()->with('error', 'yt-dlp error: ' . $status['error']);
         }
 
         $channel = Channel::create([
@@ -68,14 +69,17 @@ class ChannelDownloaderController extends Controller
         }, $filename);
     }
 
-    private function checkYtDlp()
+    private function checkYtDlpStatus()
     {
         $binary = env('YT_DLP_PATH', 'yt-dlp');
         try {
             $process = Process::run("$binary --version");
-            return $process->successful();
+            if ($process->successful()) {
+                return ['available' => true, 'path' => $binary, 'version' => trim($process->output())];
+            }
+            return ['available' => false, 'path' => $binary, 'error' => $process->errorOutput() ?: 'Unknown error (exit code ' . $process->exitCode() . ')'];
         } catch (\Exception $e) {
-            return false;
+            return ['available' => false, 'path' => $binary, 'error' => $e->getMessage()];
         }
     }
 }

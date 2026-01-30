@@ -36,6 +36,9 @@
                 <a href="{{ route('admin.ui-elements') }}" class="nav-item {{ request()->routeIs('admin.ui-elements') ? 'active' : '' }}">
                     <span class="nav-icon"><i class="fas fa-shapes"></i></span> UI Elements
                 </a>
+                <a href="{{ route('admin.channel-downloader.index') }}" class="nav-item {{ request()->routeIs('admin.channel-downloader*') ? 'active' : '' }}">
+                    <span class="nav-icon"><i class="fab fa-youtube"></i></span> Channel Downloader
+                </a>
             </nav>
         </aside>
 

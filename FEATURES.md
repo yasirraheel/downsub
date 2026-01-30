@@ -1,100 +1,11 @@
-# AI Agent & Developer Instructions (System Context)
-
-**IMPORTANT FOR AI AGENTS:** Read this file FIRST before implementing new features. This project has established patterns and helper systems. **DO NOT reinvent the wheel.** Use the existing tools and components described below.
 
 ---
 
-## 1. Project Architecture & Standards
+## 7. Channel Downloader Module
 
-*   **Type:** Laravel Starter Kit (Laravel 10+)
-*   **Theme:** Admin Panel (Custom CSS/Blade Layouts)
-*   **Database:** SQLite (Local) / MySQL (Production) - **Always use Migrations**
-*   **Authentication:** Custom Admin Auth (Middleware: `IsAdmin`)
-
----
-
-## 2. Global UI Components (MANDATORY USE)
-
-### A. Notifications (Toastr.js)
-**DO NOT** create custom alert divs or flash messages. The system automatically handles standard Laravel session keys.
-
-*   **Success:** `return redirect()->back()->with('success', 'Message');` (Green Toast)
-*   **Error:** `return redirect()->back()->with('error', 'Message');` (Red Toast)
-*   **Warning:** `return redirect()->back()->with('warning', 'Message');` (Yellow Toast)
-*   **Info:** `return redirect()->back()->with('info', 'Message');` (Blue Toast)
-*   **Validation Errors:** Automatically caught and displayed as Red Toasts.
-
-### B. Confirmations (SweetAlert2)
-**STRICT MANDATE:** NEVER use `window.confirm()`, `alert()`, or standard browser dialogs for confirmations or warnings.
-**ALWAYS** use the global `confirm-action` system or manual `Swal.fire()` calls.
-
-*   **For Links:** Add class `confirm-action`.
-    ```html
-    <a href="/delete/1" class="confirm-action">Delete</a>
-    ```
-*   **For Forms:** Add class `confirm-action` to the button and `data-form-id="my-form"`.
-    ```html
-    <form id="delete-form-1" action="..." method="POST">
-        @csrf @method('DELETE')
-        <button type="button" class="confirm-action" data-form-id="delete-form-1">Delete</button>
-    </form>
-    ```
-*   **Customization:**
-    ```html
-    <a href="..." class="confirm-action" 
-       data-title="Are you sure?" 
-       data-message="This cannot be undone!" 
-       data-confirm-text="Yes, delete it!">Delete</a>
-    ```
-
-### C. Big Success Modal (SweetAlert2)
-For major actions where a simple toast isn't enough:
-```php
-return redirect()->route('home')->with('sweet_success', 'Welcome!');
-```
-
----
-
-## 3. System Configuration (Settings)
-
-**DO NOT** hardcode configuration values. Use the `Setting` model.
-
-*   **Get Setting:** `\App\Models\Setting::get('key', 'default_value')`
-*   **Set Setting:** `\App\Models\Setting::set('key', 'value')`
-*   **Global Timezone:** The app automatically applies the timezone from settings via `SetAppTimezone` middleware.
-
----
-
-## 4. System Logging
-
-**DO NOT** create custom log viewers.
-*   **View Logs:** `/admin/system-logs` (Reads `storage/logs/laravel.log`)
-*   **Clear Logs:** `/admin/system-logs/clear`
-*   **Writing Logs:** Use standard Laravel logging: `Log::info('Message')`, `Log::error('Error')`.
-
----
-
-## 5. Development Workflow
-
-1.  **Routes:** Define web routes in `routes/web.php`.
-2.  **Controllers:** Keep controllers clean. Use Form Requests for validation if complex.
-3.  **Views:** Extend `layouts.admin` for admin pages.
-    ```blade
-    @extends('layouts.admin')
-    @section('title', 'Page Title')
-    @section('content')
-        ...
-    @endsection
-    ```
-
----
-
-## 6. Responsive & Mobile-First Design
-
-**MANDATORY:** All new views must be mobile-friendly and responsive.
-
-*   **Grid System:** Use `.grid-2`, `.grid-3`, or `.grid-4` for layouts. These automatically stack on mobile (width < 576px).
-*   **Flex Utilities:** Use `flex-wrap: wrap` when using `display: flex` for headers or action bars to prevent content squashing on small screens.
-*   **Tables:** Ensure tables have horizontal scrolling on mobile (wrap in `.table-responsive` if available, or add `overflow-x: auto`).
-*   **Forms:** Form controls automatically span 100% width. Ensure labels and inputs are readable on small devices.
-*   **Testing:** Always verify the view on a mobile viewport size before finalizing.
+*   **Route:** `/admin/channel-downloader`
+*   **Dependency:** Requires `yt-dlp` installed on the server and accessible in system PATH.
+*   **Architecture:**
+    *   **Jobs:** `FetchChannelVideosJob` (lists videos) -> `FetchVideoDetailsJob` (fetches metadata & subtitles).
+    *   **Storage:** `storage/app/temp/videos` used for temporary subtitle processing.
+    *   **Features:** Fetches Title, Thumbnail, Tags, Subtitles (TXT/VTT), Published Date.

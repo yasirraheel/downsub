@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SystemLogController;
 use App\Http\Controllers\UiElementController;
+use App\Http\Controllers\ChannelDownloaderController;
 use App\Http\Middleware\IsAdmin;
 
 // Redirect root to admin login or dashboard
@@ -35,6 +36,13 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
     Route::get('/ui-elements', [UiElementController::class, 'index'])->name('ui-elements');
     Route::post('/ui-elements', [UiElementController::class, 'store'])->name('ui-elements.store');
     Route::delete('/ui-elements/{id}', [UiElementController::class, 'destroy'])->name('ui-elements.destroy');
+
+    // Channel Downloader
+    Route::get('/channel-downloader', [ChannelDownloaderController::class, 'index'])->name('channel-downloader.index');
+    Route::post('/channel-downloader', [ChannelDownloaderController::class, 'store'])->name('channel-downloader.store');
+    Route::get('/channel-downloader/{channel}', [ChannelDownloaderController::class, 'show'])->name('channel-downloader.show');
+    Route::post('/channel-downloader/{channel}/retry', [ChannelDownloaderController::class, 'retry'])->name('channel-downloader.retry');
+    Route::get('/videos/{video}/download-subtitle', [ChannelDownloaderController::class, 'downloadSubtitle'])->name('videos.download-subtitle');
 });
 
 // Serve Dynamic CSS for UI Elements (Publicly accessible)

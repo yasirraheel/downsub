@@ -32,21 +32,22 @@
                 Status: <span class="text-{{ $video->status == 'fetched' ? 'success' : ($video->status == 'failed' ? 'danger' : 'warning') }}">{{ $video->status }}</span>
             </div>
             
-            <div class="mt-auto btn-group w-100">
-                <a href="{{ $video->url }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Watch on YouTube">
+            <div class="mt-auto btn-group w-100" role="group">
+                <a href="{{ $video->url }}" target="_blank" class="btn btn-outline-danger" title="Watch on YouTube">
                     <i class="fab fa-youtube"></i>
                 </a>
+                
                 @if($video->subtitle_content)
-                <a href="{{ route('admin.videos.download-subtitle', $video) }}" class="btn btn-sm btn-primary" title="Download Subtitle (TXT)">
-                    <i class="fas fa-file-alt"></i> TXT
+                <a href="{{ route('admin.videos.download-subtitle', $video) }}" class="btn btn-primary" title="Download Subtitle (TXT)">
+                    <i class="fas fa-file-alt"></i>
                 </a>
                 @else
-                <button class="btn btn-sm btn-secondary" disabled title="No Subtitle">
+                <button class="btn btn-secondary" disabled title="No Subtitle">
                     <i class="fas fa-file-alt"></i>
                 </button>
                 @endif
                 
-                <button type="button" class="btn btn-sm btn-info" onclick="showTags('{{ addslashes(json_encode($video->tags ?? [])) }}')">
+                <button type="button" class="btn btn-info" onclick="showTags('{{ addslashes(json_encode($video->tags ?? [])) }}')" title="View Tags">
                     <i class="fas fa-tags"></i>
                 </button>
             </div>

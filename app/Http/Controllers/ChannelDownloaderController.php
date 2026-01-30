@@ -72,8 +72,18 @@ class ChannelDownloaderController extends Controller
     private function checkYtDlpStatus()
     {
         $binary = env('YT_DLP_PATH', 'yt-dlp');
+        
+        // Define a custom temp directory for yt-dlp execution
+        // This solves "failed to map segment from shared object" errors on shared hosting
+        $tempDir = storage_path('app/temp/yt-dlp-run');
+        if (!file_exists($tempDir)) {
+            @mkdir($tempDir, 0755, true);
+        }
+
         try {
-            $process = Process::run("$binary --version");
+            // Pass TMPDIR environment variable to override system /tmp
+            $process = Process::env(['TMPDIR' => $tempDir])->run("$binary --version");
+            
             if ($process->successful()) {
                 return ['available' => true, 'path' => $binary, 'version' => trim($process->output())];
             }

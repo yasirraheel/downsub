@@ -48,7 +48,13 @@ class FetchVideoDetailsJob implements ShouldQueue
             $binary = env('YT_DLP_PATH', 'yt-dlp');
             $command = "$binary --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
 
-            $result = Process::timeout(600)->run($command);
+            // Ensure custom temp dir for execution exists (for shared hosting compatibility)
+            $execTempDir = storage_path('app/temp/yt-dlp-run');
+            if (!file_exists($execTempDir)) {
+                @mkdir($execTempDir, 0755, true);
+            }
+
+            $result = Process::env(['TMPDIR' => $execTempDir])->timeout(600)->run($command);
 
             if ($result->failed()) {
                 throw new \Exception("yt-dlp failed: " . $result->errorOutput());

@@ -38,8 +38,14 @@ class FetchChannelVideosJob implements ShouldQueue
             // Note: This checks for env variable or assumes yt-dlp is in PATH.
             $binary = env('YT_DLP_PATH', 'yt-dlp');
             $command = "$binary --flat-playlist --dump-single-json \"{$this->channel->url}\"";
+            
+            // Use custom temp dir to avoid shared hosting /tmp restrictions
+            $tempDir = storage_path('app/temp/yt-dlp-run');
+            if (!file_exists($tempDir)) {
+                @mkdir($tempDir, 0755, true);
+            }
 
-            $result = Process::timeout(3600)->run($command);
+            $result = Process::env(['TMPDIR' => $tempDir])->timeout(3600)->run($command);
 
             if ($result->failed()) {
                 throw new \Exception("yt-dlp failed: " . $result->errorOutput());

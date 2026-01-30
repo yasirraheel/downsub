@@ -4,22 +4,6 @@
 
 @section('content')
 
-@if(session('success'))
-<div class="alert alert-success" style="padding: 1rem; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 1rem;">
-    {{ session('success') }}
-</div>
-@endif
-
-@if($errors->any())
-<div class="alert alert-danger" style="padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 4px; margin-bottom: 1rem;">
-    <ul>
-        @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
-
 <div class="grid-2">
     <div class="card">
         <h3>General Settings</h3>

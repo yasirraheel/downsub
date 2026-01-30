@@ -6,6 +6,7 @@
     <title>@yield('title', 'Admin Panel') - WaSender</title>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
 
@@ -38,7 +39,7 @@
                     </button>
                     <h2 class="header-title">@yield('title')</h2>
                 </div>
-                
+
                 <div class="header-actions">
                     <span class="text-muted">Admin</span>
                     <form action="{{ route('admin.logout') }}" method="POST">
@@ -57,11 +58,62 @@
         </main>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        // Toastr Configuration
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Handle Session Messages
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+
+        @if(Session::has('danger'))
+            toastr.error("{{ Session::get('danger') }}");
+        @endif
+
+        @if(Session::has('warning'))
+            toastr.warning("{{ Session::get('warning') }}");
+        @endif
+
+        @if(Session::has('info'))
+            toastr.info("{{ Session::get('info') }}");
+        @endif
+
+        // Handle Validation Errors
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                toastr.error("{{ $error }}");
+            @endforeach
+        @endif
+    </script>
+
     <script>
         // Mobile Sidebar Toggle
         const toggleBtn = document.getElementById('sidebar-toggle');
         const sidebar = document.getElementById('sidebar');
-        
+
         // Show toggle on mobile
         function checkResize() {
             if (window.innerWidth <= 992) {
@@ -71,7 +123,7 @@
                 sidebar.classList.remove('open');
             }
         }
-        
+
         window.addEventListener('resize', checkResize);
         checkResize();
 
@@ -81,9 +133,9 @@
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 992 && 
-                sidebar.classList.contains('open') && 
-                !sidebar.contains(e.target) && 
+            if (window.innerWidth <= 992 &&
+                sidebar.classList.contains('open') &&
+                !sidebar.contains(e.target) &&
                 e.target !== toggleBtn &&
                 !toggleBtn.contains(e.target)) {
                 sidebar.classList.remove('open');

@@ -47,11 +47,9 @@ class FetchVideoDetailsJob implements ShouldQueue
 
             $binary = env('YT_DLP_PATH', 'yt-dlp');
             // Added --no-playlist to ensure we only process the single video
-            // Added --user-agent and --referer to avoid bot detection
-            // Added --sleep-requests to be safe (though we are running single command)
-            // Added --extractor-args "youtube:player_client=android" to bypass web-based bot detection
-            $userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
-            $command = "$binary --user-agent \"{$userAgent}\" --referer \"https://www.youtube.com/\" --extractor-args \"youtube:player_client=android\" --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --no-playlist --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
+            // FIXED: Removed custom User-Agent and Referer which conflict with player_client
+            // Switched to 'ios' client which is currently more reliable for server-side requests
+            $command = "$binary --extractor-args \"youtube:player_client=ios\" --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --no-playlist --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
 
             // Add a random delay to prevent hammering if multiple jobs run
             sleep(rand(5, 10));

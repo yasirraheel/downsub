@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SystemLogController;
 use App\Http\Middleware\IsAdmin;
 
 // Redirect root to admin login or dashboard
@@ -26,5 +27,6 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
     Route::post('/settings/general', [SettingsController::class, 'updateGeneral'])->name('settings.updateGeneral');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.updatePassword');
 
-    Route::get('/system-logs', function () { return view('admin.system-logs'); })->name('system-logs');
+    Route::get('/system-logs', [SystemLogController::class, 'index'])->name('system-logs');
+    Route::post('/system-logs/clear', [SystemLogController::class, 'clear'])->name('system-logs.clear');
 });

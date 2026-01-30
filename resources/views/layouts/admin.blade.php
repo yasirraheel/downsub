@@ -13,29 +13,11 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="fab fa-whatsapp" style="margin-right: 10px;"></i> WaSender
+                <i class="fas fa-cubes" style="margin-right: 10px;"></i> Starter Kit
             </div>
             <nav class="sidebar-nav">
                 <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span> Dashboard
-                </a>
-                <a href="{{ route('admin.wa-accounts') }}" class="nav-item {{ request()->routeIs('admin.wa-accounts') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-users"></i></span> WA Accounts
-                </a>
-                <a href="{{ route('admin.bots') }}" class="nav-item {{ request()->routeIs('admin.bots') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-robot"></i></span> Bots
-                </a>
-                <a href="{{ route('admin.campaigns') }}" class="nav-item {{ request()->routeIs('admin.campaigns') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-paper-plane"></i></span> Campaigns
-                </a>
-                <a href="{{ route('admin.messages') }}" class="nav-item {{ request()->routeIs('admin.messages') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-envelope"></i></span> Messages
-                </a>
-                <a href="{{ route('admin.templates') }}" class="nav-item {{ request()->routeIs('admin.templates') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-file-alt"></i></span> Templates
-                </a>
-                <a href="{{ route('admin.webhooks') }}" class="nav-item {{ request()->routeIs('admin.webhooks') ? 'active' : '' }}">
-                    <span class="nav-icon"><i class="fas fa-globe"></i></span> Webhooks
                 </a>
                 <a href="{{ route('admin.system-logs') }}" class="nav-item {{ request()->routeIs('admin.system-logs') ? 'active' : '' }}">
                     <span class="nav-icon"><i class="fas fa-list"></i></span> System Logs

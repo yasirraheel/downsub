@@ -70,8 +70,9 @@ class ChannelDownloaderController extends Controller
 
     private function checkYtDlp()
     {
+        $binary = env('YT_DLP_PATH', 'yt-dlp');
         try {
-            $process = Process::run('yt-dlp --version');
+            $process = Process::run("$binary --version");
             return $process->successful();
         } catch (\Exception $e) {
             return false;

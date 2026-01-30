@@ -35,9 +35,10 @@ class FetchChannelVideosJob implements ShouldQueue
             // --flat-playlist: Don't download videos, just list them
             // --dump-single-json: Output as one JSON object
             // We use Process to run the command.
-            // Note: This assumes yt-dlp is in PATH.
-            $command = "yt-dlp --flat-playlist --dump-single-json \"{$this->channel->url}\"";
-            
+            // Note: This checks for env variable or assumes yt-dlp is in PATH.
+            $binary = env('YT_DLP_PATH', 'yt-dlp');
+            $command = "$binary --flat-playlist --dump-single-json \"{$this->channel->url}\"";
+
             $result = Process::timeout(3600)->run($command);
 
             if ($result->failed()) {
@@ -101,7 +102,7 @@ class FetchChannelVideosJob implements ShouldQueue
 
             $this->channel->update([
                 'video_count' => $count,
-                'status' => 'completed', 
+                'status' => 'completed',
             ]);
 
         } catch (\Exception $e) {

@@ -29,7 +29,7 @@ class FetchVideoDetailsJob implements ShouldQueue
     public function handle(): void
     {
         $this->video->update(['status' => 'fetching']);
-        
+
         // Use a unique temp directory for this video
         $tempDir = storage_path('app/temp/videos/' . $this->video->video_id);
         if (!File::exists($tempDir)) {
@@ -44,8 +44,9 @@ class FetchVideoDetailsJob implements ShouldQueue
             // --skip-download: Don't download video
             // --print-json: Output metadata
             // -o: Output template
-            
-            $command = "yt-dlp --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
+
+            $binary = env('YT_DLP_PATH', 'yt-dlp');
+            $command = "$binary --write-auto-sub --write-sub --sub-lang en --convert-subs vtt --skip-download --print-json --no-warnings -o \"{$tempDir}/%(id)s\" \"{$this->video->url}\"";
 
             $result = Process::timeout(600)->run($command);
 
@@ -76,11 +77,11 @@ class FetchVideoDetailsJob implements ShouldQueue
             $subtitleLang = null;
 
             if ($files && count($files) > 0) {
-                // Prefer manual subs if multiple? 
+                // Prefer manual subs if multiple?
                 // Usually yt-dlp naming: id.en.vtt
                 $subtitlePath = $files[0];
                 $subtitleContent = File::get($subtitlePath);
-                $subtitleLang = 'en'; 
+                $subtitleLang = 'en';
             }
 
             if ($subtitleContent) {

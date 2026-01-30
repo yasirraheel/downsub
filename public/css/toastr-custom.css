@@ -1,7 +1,7 @@
 /* Global Toastr Customization */
 #toast-container > .toast {
-    width: 380px !important; /* Consistent width, slightly wider for better readability */
-    min-height: 70px !important; /* Good suitable default height */
+    width: 320px !important; /* Decreased width as requested */
+    min-height: 90px !important; /* Increased height as requested */
     padding: 15px 15px 15px 60px !important; /* Padding with space for icon on left */
     opacity: 1 !important; /* No transparency */
     border-radius: 8px !important; /* Soft corners */
@@ -58,10 +58,10 @@
 /* Close Button Positioning */
 #toast-container > .toast-close-button {
     position: absolute !important;
-    top: 50% !important;
-    right: 15px !important;
-    transform: translateY(-50%) !important;
-    font-size: 22px !important;
+    top: 5px !important; /* Moved to top */
+    right: 5px !important; /* Moved to right */
+    /* Removed transform centering to fix "cross x showing in centre" issue */
+    font-size: 18px !important;
     font-weight: 300 !important;
     color: inherit !important;
     opacity: 0.6 !important;

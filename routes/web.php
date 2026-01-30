@@ -29,4 +29,9 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
 
     Route::get('/system-logs', [SystemLogController::class, 'index'])->name('system-logs');
     Route::post('/system-logs/clear', [SystemLogController::class, 'clear'])->name('system-logs.clear');
+
+    // UI Elements
+    Route::get('/ui-elements', function () {
+        return view('admin.ui-elements');
+    })->name('ui-elements');
 });

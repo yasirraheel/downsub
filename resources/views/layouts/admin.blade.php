@@ -62,6 +62,7 @@
 
             <!-- Content -->
             <div class="admin-content">
+                <h2 class="mobile-page-title">@yield('title')</h2>
                 @yield('content')
             </div>
         </main>

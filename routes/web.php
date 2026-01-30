@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SystemLogController;
+use App\Http\Controllers\UiElementController;
 use App\Http\Middleware\IsAdmin;
 
 // Redirect root to admin login or dashboard
@@ -31,7 +32,10 @@ Route::middleware([IsAdmin::class])->prefix('admin')->name('admin.')->group(func
     Route::post('/system-logs/clear', [SystemLogController::class, 'clear'])->name('system-logs.clear');
 
     // UI Elements
-    Route::get('/ui-elements', function () {
-        return view('admin.ui-elements');
-    })->name('ui-elements');
+    Route::get('/ui-elements', [UiElementController::class, 'index'])->name('ui-elements');
+    Route::post('/ui-elements', [UiElementController::class, 'store'])->name('ui-elements.store');
+    Route::delete('/ui-elements/{id}', [UiElementController::class, 'destroy'])->name('ui-elements.destroy');
 });
+
+// Serve Dynamic CSS for UI Elements (Publicly accessible)
+Route::get('/css/custom-ui.css', [UiElementController::class, 'customCss'])->name('custom-ui.css');
